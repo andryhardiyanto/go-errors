@@ -13,7 +13,7 @@ func ExampleNew() {
 
 // Example penggunaan predefined errors
 func ExampleErrorNotFound() {
-	err := ErrorNotFound
+	err := ErrorNotFound()
 	fmt.Printf("Code: %d, Message: %s, Type: %s\n", err.Code, err.Message, err.Type)
 }
 
@@ -75,16 +75,18 @@ func TestErrorInterface(t *testing.T) {
 
 func TestPredefinedErrors(t *testing.T) {
 	// Test predefined errors
-	if ErrorNotFound.Code != 404 {
-		t.Errorf("Expected ErrorNotFound.Code to be 404, got %d", ErrorNotFound.Code)
+	notFoundErr := ErrorNotFound()
+	if notFoundErr.Code != 404 {
+		t.Errorf("Expected ErrorNotFound.Code to be 404, got %d", notFoundErr.Code)
 	}
 
-	if ErrorNotFound.Type != "NOT_FOUND" {
-		t.Errorf("Expected ErrorNotFound.Type to be 'NOT_FOUND', got %s", ErrorNotFound.Type)
+	if notFoundErr.Type != "NOT_FOUND" {
+		t.Errorf("Expected ErrorNotFound.Type to be 'NOT_FOUND', got %s", notFoundErr.Type)
 	}
 
-	if ErrorUnauthorized.Code != 401 {
-		t.Errorf("Expected ErrorUnauthorized.Code to be 401, got %d", ErrorUnauthorized.Code)
+	unauthorizedErr := ErrorUnauthorized()
+	if unauthorizedErr.Code != 401 {
+		t.Errorf("Expected ErrorUnauthorized.Code to be 401, got %d", unauthorizedErr.Code)
 	}
 }
 

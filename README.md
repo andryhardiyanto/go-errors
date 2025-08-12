@@ -4,11 +4,11 @@ A simple and efficient error handling library for Go applications with support f
 
 ## Features
 
-- 📚 **Stack Traces**: Automatic stack trace capture
+- 📚 **Stack Traces**: Automatic stack trace capture using `runtime.Callers` - captures the exact location where errors are created
 - 🔧 **Structured Errors**: Well-defined error types with codes
 - ✅ **Validation Errors**: Support for field validation errors
 - 🔗 **Error Wrapping**: Compatible with Go 1.13+ error wrapping
-- 🚀 **Predefined Errors**: Common HTTP error types ready to use
+- 🚀 **Predefined Errors**: Common HTTP error types ready to use as factory functions
 - 🎯 **Simple API**: Clean and straightforward interface
 
 ## Installation
@@ -33,13 +33,13 @@ func main() {
     fmt.Println(err.Error())
 
     // Use predefined errors
-    err = errors.ErrorNotFound
+    err = errors.ErrorNotFound()
     fmt.Printf("Code: %d, Message: %s\n", err.Code, err.Message)
     
     // Other predefined errors
-    badRequestErr := errors.ErrorBadRequest
-    unauthorizedErr := errors.ErrorUnauthorized
-    conflictErr := errors.ErrorConflict
+    badRequestErr := errors.ErrorBadRequest()
+    unauthorizedErr := errors.ErrorUnauthorized()
+    conflictErr := errors.ErrorConflict()
     
     // Wrap existing error
     originalErr := fmt.Errorf("database error")
@@ -54,10 +54,6 @@ func main() {
     }
     validationErr := errors.Violations(violations)
     fmt.Printf("Validation errors: %d\n", len(validationErr.Violations))
-    
-    // Default error
-    defaultErr := errors.DefaultError()
-    fmt.Println(defaultErr.Error())
 }
 ```
 
@@ -80,25 +76,20 @@ originalErr := fmt.Errorf("connection failed")
 wrappedErr := errors.Wrap(originalErr)
 ```
 
-#### `DefaultError() *Error`
-Returns a default internal server error.
-
-```go
-err := errors.DefaultError()
-```
-
 ### Predefined Errors
 
-| Variable | Code | Type | Message |
+| Function | Code | Type | Message |
 |----------|------|------|---------|
-| `ErrorBadRequest` | 400 | BAD_REQUEST | Bad request |
-| `ErrorUnauthorized` | 401 | UNAUTHORIZED | Unauthorized |
-| `ErrorForbidden` | 403 | FORBIDDEN | Forbidden |
-| `ErrorNotFound` | 404 | NOT_FOUND | Not found |
-| `ErrorConflict` | 409 | CONFLICT | Conflict |
-| `ErrorUnprocessableEntity` | 422 | UNPROCESSABLE_ENTITY | Unprocessable entity |
-| `ErrorInternalServerError` | 500 | INTERNAL_SERVER_ERROR | Internal server error |
-| `ErrorPanic` | 500 | PANIC | Panic |
+| `ErrorBadRequest()` | 400 | BAD_REQUEST | Bad request |
+| `ErrorUnauthorized()` | 401 | UNAUTHORIZED | Unauthorized |
+| `ErrorForbidden()` | 403 | FORBIDDEN | Forbidden |
+| `ErrorNotFound()` | 404 | NOT_FOUND | Not found |
+| `ErrorConflict()` | 409 | CONFLICT | Conflict |
+| `ErrorUnprocessableEntity()` | 422 | UNPROCESSABLE_ENTITY | Unprocessable entity |
+| `ErrorInternalServerError()` | 500 | INTERNAL_SERVER_ERROR | Internal server error |
+| `ErrorPanic()` | 500 | PANIC | Panic |
+
+**Note**: These are factory functions that capture stack traces at the point of invocation, not during package initialization.
 
 ### Validation Errors
 
@@ -174,37 +165,37 @@ type Error struct {
 ```go
 // HTTP 400 - Bad Request
 if invalidInput {
-    return errors.ErrorBadRequest
+    return errors.ErrorBadRequest()
 }
 
 // HTTP 401 - Unauthorized
 if !isAuthenticated {
-    return errors.ErrorUnauthorized
+    return errors.ErrorUnauthorized()
 }
 
 // HTTP 403 - Forbidden
 if !hasPermission {
-    return errors.ErrorForbidden
+    return errors.ErrorForbidden()
 }
 
 // HTTP 404 - Not Found
 if user == nil {
-    return errors.ErrorNotFound
+    return errors.ErrorNotFound()
 }
 
 // HTTP 409 - Conflict
 if emailExists {
-    return errors.ErrorConflict
+    return errors.ErrorConflict()
 }
 
 // HTTP 422 - Unprocessable Entity
 if hasValidationErrors {
-    return errors.ErrorUnprocessableEntity
+    return errors.ErrorUnprocessableEntity()
 }
 
 // HTTP 500 - Internal Server Error
 if dbError != nil {
-    return errors.ErrorInternalServerError
+    return errors.ErrorInternalServerError()
 }
 ```
 
@@ -237,7 +228,7 @@ err := errors.Violations(violations)
 func CreateUser(w http.ResponseWriter, r *http.Request) {
     var user User
     if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-        writeErrorResponse(w, errors.ErrorBadRequest)
+        writeErrorResponse(w, errors.ErrorBadRequest())
         return
     }
 
@@ -249,10 +240,10 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
     if err := userService.Create(user); err != nil {
         if errors.Is(err, ErrUserExists) {
-            writeErrorResponse(w, errors.ErrorConflict)
+            writeErrorResponse(w, errors.ErrorConflict())
             return
         }
-        writeErrorResponse(w, errors.ErrorInternalServerError)
+        writeErrorResponse(w, errors.ErrorInternalServerError())
         return
     }
 
