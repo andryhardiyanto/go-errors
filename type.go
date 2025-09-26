@@ -3,18 +3,18 @@ package errors
 type (
 	ViolationErrorType string
 	ValidationError    struct {
-		Type    ViolationErrorType
-		Field   string
-		Message string
+		Type    ViolationErrorType `json:"type"`
+		Field   string             `json:"field"`
+		Message string             `json:"message"`
 	}
 
 	Error struct {
-		Type        string
-		Code        int64
-		Message     string
-		Violations  []ValidationError
-		Err         error
-		StackTraces []string
+		Type        string            `json:"type"`
+		Code        int64             `json:"code"`
+		Message     string            `json:"message"`
+		Violations  []ValidationError `json:"violations"`
+		Err         error             `json:"-"`
+		StackTraces []string          `json:"stack_traces"`
 	}
 )
 

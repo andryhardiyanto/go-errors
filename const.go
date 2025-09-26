@@ -10,4 +10,5 @@ const (
 	ViolationErrorTypeEmail      ViolationErrorType = "EMAIL"
 	ViolationErrorTypeDate       ViolationErrorType = "DATE"
 	ViolationErrorTypeRequiredIf ViolationErrorType = "REQUIRED_IF"
+	ViolationErrorTypeSort       ViolationErrorType = "SORT"
 )
