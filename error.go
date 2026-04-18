@@ -157,7 +157,7 @@ func ErrorUnprocessableEntity() *Error {
 		Type:        "UNPROCESSABLE_ENTITY",
 		Code:        422,
 		Violations:  make([]ValidationError, 0),
-		Message:     "Unprocessable entity",
+		Message:     "Unprocessable Entity",
 		StackTraces: captureStackTrace(1),
 	}
 	return e
@@ -168,7 +168,7 @@ func ErrorInternalServerError() *Error {
 		Type:        "INTERNAL_SERVER_ERROR",
 		Code:        500,
 		Violations:  make([]ValidationError, 0),
-		Message:     "Internal server error",
+		Message:     "Internal Server Error",
 		StackTraces: captureStackTrace(1),
 	}
 	return e
@@ -180,6 +180,17 @@ func ErrorPanic() *Error {
 		Code:        500,
 		Violations:  make([]ValidationError, 0),
 		Message:     "Panic",
+		StackTraces: captureStackTrace(1),
+	}
+	return e
+}
+
+func ErrorTooManyRequests() *Error {
+	e := &Error{
+		Type:        "TOO_MANY_REQUEST",
+		Code:        500,
+		Violations:  make([]ValidationError, 0),
+		Message:     "Too Many Requests",
 		StackTraces: captureStackTrace(1),
 	}
 	return e
