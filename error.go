@@ -188,7 +188,7 @@ func ErrorPanic() *Error {
 func ErrorTooManyRequests() *Error {
 	e := &Error{
 		Type:        "TOO_MANY_REQUEST",
-		Code:        500,
+		Code:        429,
 		Violations:  make([]ValidationError, 0),
 		Message:     "Too Many Requests",
 		StackTraces: captureStackTrace(1),
